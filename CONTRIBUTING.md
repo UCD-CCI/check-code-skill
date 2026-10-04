@@ -11,10 +11,10 @@ Small, focused pull requests are preferred. This repo encodes security-review gu
 
 ## Which file should change?
 
-- Update `skill/references/02-vulnerability-classes.md` when you are expanding an existing class or adding a closely related detection checklist.
+- Update `skill/references/02-checks.md` when expanding detection guidance (vuln classes, language/crypto pitfalls, or LLM trust boundaries).
 - Add a new numbered reference only when the topic is large enough to deserve its own loading step and can stay coherent as a standalone module.
-- Update `skill/references/03-language-specific.md` for language or framework foot-guns that fit the existing "Flag / Safe alternatives" pattern.
-- Update `skill/references/05-output-format.md` when changing report schema or machine-readable mapping expectations.
+- Update `skill/references/03-output-format.md` when changing report schema expectations.
+- Update `skill/references/04-remediation.md` when adding or changing fix templates.
 
 ## Evaluation harness (optional)
 

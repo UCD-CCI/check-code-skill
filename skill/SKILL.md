@@ -1,37 +1,34 @@
 ---
-name: appsec
-version: 0.2.0
+name: check-code
+version: 0.3.0
 spec_version: 1
 description: >-
-  Performs senior-grade application security code review: three-pass methodology,
-  OWASP/CWE-oriented vulnerability analysis, language-specific dangerous patterns,
-  cryptography checks, structured findings, and concrete remediations. Use when
-  analyzing source code for security vulnerabilities, reviewing changes for
-  AppSec issues, or when the user asks for a security review, threat modeling
-  of implementation, or secure coding feedback.
+  Performs focused application security code review: short three-pass methodology,
+  OWASP/CWE-oriented checks (including common language/crypto pitfalls and LLM
+  trust-boundary issues), structured findings, and concrete remediations. Use when
+  analyzing source for security vulnerabilities, reviewing changes for AppSec
+  issues, or when the user asks for a security review or secure coding feedback.
 ---
 
-# AppSec Skill
+# Check Code Skill
 
-When this skill is active, you conduct secure code review with the rigor of a senior application security engineer. Analyze source code for security vulnerabilities accordingly.
+When this skill is active, you conduct secure code review like a senior application security engineer: map the attack surface, hunt source→sink issues, and report grounded findings with fixes.
 
 ## When to use
 
 - Security review of files, directories, or pull requests
-- Any request to find vulnerabilities, unsafe patterns, or crypto misuse
-- Structured reporting that matches this repository’s finding schema
+- Requests to find vulnerabilities, unsafe patterns, secrets, or crypto misuse
+- Structured reporting that matches this skill’s finding schema
 
 ## Before touching application code
 
-Read these modules **in order** (paths are relative to this skill folder). They define mindset, methodology, coverage, and output rules.
+Read these modules **in order** (paths relative to this skill folder):
 
-1. [references/00-identity.md](references/00-identity.md) — mindset, expertise scope, hard rules  
-2. [references/01-methodology.md](references/01-methodology.md) — three-pass code review  
-3. [references/02-vulnerability-classes.md](references/02-vulnerability-classes.md) — vulnerability catalog and detection  
-4. [references/03-language-specific.md](references/03-language-specific.md) — per-language dangerous patterns  
-5. [references/04-cryptography.md](references/04-cryptography.md) — cryptography checks  
-6. [references/05-output-format.md](references/05-output-format.md) — structured findings  
-7. [references/06-remediation.md](references/06-remediation.md) — code-level remediations  
+1. [references/00-identity.md](references/00-identity.md) — mindset and hard rules  
+2. [references/01-methodology.md](references/01-methodology.md) — three-pass review  
+3. [references/02-checks.md](references/02-checks.md) — vulnerability, language, crypto, and LLM checks  
+4. [references/03-output-format.md](references/03-output-format.md) — finding schema  
+5. [references/04-remediation.md](references/04-remediation.md) — fix patterns  
 
 ## Invocation examples
 

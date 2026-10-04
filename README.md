@@ -1,6 +1,6 @@
 <div align="center" id="readme-top">
 
-# AppSec Skill
+# Check Code Skill
 
 **🔐 Portable secure-code review for coding agents.**
 
@@ -11,6 +11,9 @@
 
 </div>
 
+> Maintained by [UCD-CCI](https://github.com/UCD-CCI). Slimmed/adapted from [joshuaporth/appsec-skill](https://github.com/joshuaporth/appsec-skill) (MIT).  
+> Companion intentionally vulnerable demo: [appsec-demo-vulnerable-app](https://github.com/UCD-CCI/appsec-demo-vulnerable-app).
+
 ---
 
 <h2 id="quick-start">🚀 Quick start</h2>
@@ -20,17 +23,17 @@
 3. Run a review:
 
 ```text
-Load the AppSec skill, then analyze path/to/file.py for security vulnerabilities.
+Load the Check Code skill, then analyze path/to/file.py for security vulnerabilities.
 ```
 
-For a whole tree, swap in `all source files under path/to/project/`.
+For a whole tree, swap in `all source files under path/to/project/`. Try it on the [demo vulnerable app](https://github.com/UCD-CCI/appsec-demo-vulnerable-app).
 
-<h2 id="why-appsec-skill">🎯 Why AppSec Skill</h2>
+<h2 id="why-appsec-skill">🎯 Why Check Code Skill</h2>
 
-One-shot “check my code for security” prompts tend to miss classes, hallucinate line numbers, and return inconsistent reports. AppSec Skill encodes a **repeatable** review pipeline:
+One-shot “check my code for security” prompts tend to miss classes, hallucinate line numbers, and return inconsistent reports. This skill encodes a **repeatable** review pipeline:
 
 - **Grounded findings** — cite evidence; mark uncertainty explicitly.
-- **Structured coverage** — methodology, OWASP/CWE-oriented classes, language traps, and crypto checks.
+- **Structured coverage** — short methodology, OWASP/CWE checks, language/crypto pitfalls, and LLM trust boundaries.
 - **Actionable output** — one stable finding schema plus remediation patterns you can diff in Git.
 
 Works with any host that loads **[Open Agent Skills](https://openagentskills.dev/docs/specification)**-shaped content ([`SKILL.md`](./skill/SKILL.md) + numbered [`references/`](./skill/references/)). Plain Markdown — no bundled runtime.
@@ -47,21 +50,15 @@ flowchart TD
   B --> D[Analyze target source code]
   C --> D
 
-  D --> E[Classify findings<br/>02-vulnerability-classes]
-  D --> F[Apply language checks<br/>03-language-specific]
-  D --> G[Apply crypto checks<br/>04-cryptography]
-
-  E --> H[Normalize into schema<br/>05-output-format]
-  F --> H
-  G --> H
-
-  H --> I[Propose concrete fixes<br/>06-remediation]
-  I --> J[Deliver prioritized report]
+  D --> E[Apply checks<br/>02-checks]
+  E --> F[Normalize into schema<br/>03-output-format]
+  F --> G[Propose concrete fixes<br/>04-remediation]
+  G --> H[Deliver prioritized report]
 ```
 
 <h2 id="sample-output">👀 Sample output</h2>
 
-Findings follow [`05-output-format.md`](./skill/references/05-output-format.md) — stable IDs, CWE/OWASP mapping, and SARIF-friendly fields. Real reviews must include every required field; the example below is truncated.
+Findings follow [`03-output-format.md`](./skill/references/03-output-format.md) — stable IDs, CWE/OWASP mapping, and a fixed finding schema. Real reviews must include every required field; the example below is truncated.
 
 <details>
 <summary><strong>Example finding (illustrative)</strong></summary>
@@ -83,11 +80,9 @@ User-controlled `user_id` is interpolated into raw SQL. Use parameterized querie
 |--:|-----------|--------|
 | 00 | [`00-identity.md`](./skill/references/00-identity.md) | Mindset, scope, hard rules |
 | 01 | [`01-methodology.md`](./skill/references/01-methodology.md) | Three-pass review |
-| 02 | [`02-vulnerability-classes.md`](./skill/references/02-vulnerability-classes.md) | Catalog + detection notes |
-| 03 | [`03-language-specific.md`](./skill/references/03-language-specific.md) | Language traps |
-| 04 | [`04-cryptography.md`](./skill/references/04-cryptography.md) | Crypto checks |
-| 05 | [`05-output-format.md`](./skill/references/05-output-format.md) | Finding schema |
-| 06 | [`06-remediation.md`](./skill/references/06-remediation.md) | Fix patterns |
+| 02 | [`02-checks.md`](./skill/references/02-checks.md) | Vuln classes, language/crypto pitfalls, LLM trust boundaries |
+| 03 | [`03-output-format.md`](./skill/references/03-output-format.md) | Finding schema |
+| 04 | [`04-remediation.md`](./skill/references/04-remediation.md) | Fix patterns |
 
 **Host setup:** discovery paths vary by product (project `.cursor/skills`, user-level dirs, Claude Code bundles, etc.). See your host’s docs — e.g. Cursor’s [Agent Skills](https://cursor.com/docs/skills) guide. Examples only, not exhaustive: **Cursor**, **Claude Code**, **Kiro**, and similar loaders may ingest [`skill/`](./skill/) unchanged once discovery matches.
 
