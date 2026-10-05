@@ -55,8 +55,9 @@ Enforce authz in application code for sensitive operations; edge-only rules are 
 ## Language quick flags (apply what matches)
 
 **Python:** `eval`/`exec`, `shell=True`, `pickle.loads`, unsafe `yaml.load`, `random` for tokens, `open(user_path)`, f-string SQL, `verify=False`  
-**JS/Node:** `eval`, `innerHTML`, `child_process.exec`, `Math.random` for tokens, unvalidated `res.redirect`  
-**Other:** same ideas — no shell concat, no string-built SQL, CSPRNG for tokens, path canonicalization
+**JavaScript / Node:** `eval`, `innerHTML`, `child_process.exec`, `Math.random` for tokens, unvalidated `res.redirect`  
+
+This demo skill focuses on Python and JS; do not expand into other languages unless the reviewed code is clearly in another language and the same sink classes apply.
 
 ## LLM / GenAI trust boundaries
 
@@ -69,3 +70,4 @@ When the app uses models, tools, or prompt-shaped workflows, also check:
 5. **Excessive agency** — privileged actions (reset password, approve, export) must not be callable without real role checks just because a model “chose” a tool
 
 Prefer findings that name the missing server-side control, not only “the model might refuse.”
+When reporting, use OWASP LLM/GenAI category labels where they fit (see `03-output-format.md`).

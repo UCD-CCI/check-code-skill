@@ -55,8 +55,15 @@ Example: a HIGH severity issue behind strong, unlikely preconditions can be **P2
 
 ## OWASP labels
 
-Use **OWASP Top 10:2021** category labels for classic web/app findings (e.g. `A03:2021 – Injection`).  
-For LLM/GenAI trust-boundary findings, you may also cite **OWASP Top 10 for LLM / GenAI** risk IDs when they fit; still include a CWE.
+- **Classic web/app findings:** use **OWASP Top 10:2021** (e.g. `A03:2021 – Injection`, `A01:2021 – Broken Access Control`).
+- **LLM / GenAI trust-boundary findings:** use an **OWASP Top 10 for LLM / GenAI** label when one fits (e.g. prompt injection, sensitive information disclosure, excessive agency, improper output handling). You may put that in **OWASP Category**, or pair it with a 2021 web category when both apply.
+- Always include a **CWE** as well.
+
+Example LLM-oriented category strings:
+- `OWASP LLM01 – Prompt Injection`
+- `OWASP LLM02 – Sensitive Information Disclosure`
+- `OWASP LLM06 – Excessive Agency`
+- `OWASP LLM05 – Improper Output Handling`
 
 ## After all findings — Scan Summary
 
@@ -84,7 +91,7 @@ Build a deterministic ID (not a random UUID):
 1. **File path as given in the review scope** — repo-relative when reviewing a repository; for uploads or paste-only chats, use the path/name provided with the file  
 2. CWE id  
 3. Normalized sink snippet (collapse whitespace; keep key function/operator names)  
-4. Hash with **SHA-256**; keep the **first 12** hex chars (do not invent IDs — compute when a sandbox/tool is available)  
+4. Hash with **SHA-256 only** (not SHA-1); keep the **first 12** hex chars. Compute the hash when a sandbox/tool is available — do not invent IDs.
 5. Emit `APPSEC-<hash>`  
 
 Same issue in the same file should keep the same ID across wording changes.

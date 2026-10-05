@@ -2,7 +2,7 @@
 
 Every remediation must show corrected code, fix the root cause, preserve developer intent, and say why the fix works (one sentence).
 
-Templates below are **Python/JS illustrations**. For Java, Go, PHP, Ruby, etc., apply the same security property with idiomatic APIs. Match the project’s SQL driver placeholder style (`?`, `%s`, `:name`, `$1`, …).
+Templates below are **Python and JavaScript only** (enough for this demo skill). Match the project’s SQL driver placeholder style (`?`, `%s`, `:name`, …).
 
 ## SQL injection
 ```python
