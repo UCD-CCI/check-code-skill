@@ -52,6 +52,19 @@ Enforce authz in application code for sensitive operations; edge-only rules are 
 - Cookie-auth state changes without CSRF protection
 - Open redirect via unvalidated `next` / `return_to`
 
+## Supply chain — hallucinated / typo-squatted packages
+
+AI assistants and copy-pasted snippets often invent package names that do not exist yet (**hallucinated dependencies** / “slopsquatting”). An attacker can later publish a **malicious package under that exact name** on PyPI/npm; the next `pip install` / `npm install` pulls malware.
+
+**Flag when you see:**
+- Imports or dependency pins for packages that look plausible but are uncommon, oddly spelled, or not verifiable in the lockfile/registry evidence in scope
+- README/setup instructions that add libraries suggested by an LLM without a known upstream
+- Near-miss names that mimic popular libraries (`reqeusts`, `lodashes`, `open-ai-python`, etc.)
+
+**Safe pattern:** only add dependencies that exist on the official registry, match a known project/URL, and are pinned via a lockfile; prefer well-known packages over novel names from chat.
+
+When reporting, CWE-829 (Inclusion of Functionality from Untrusted Control Sphere) or CWE-1357 (Reliance on Insufficiently Trustworthy Component) often fit; OWASP category can be supply-chain / LLM-assisted insecure advice.
+
 ## Language quick flags (apply what matches)
 
 **Python:** `eval`/`exec`, `shell=True`, `pickle.loads`, unsafe `yaml.load`, `random` for tokens, `open(user_path)`, f-string SQL, `verify=False`  
@@ -68,6 +81,7 @@ When the app uses models, tools, or prompt-shaped workflows, also check:
 3. **Tools need the same authz as APIs** — LLM-triggered lookups/actions must enforce authentication and object/function-level authorization in server code
 4. **Untrusted content is not instructions** — tickets, emails, pasted notes must not auto-trigger privileged tools (indirect prompt injection)
 5. **Excessive agency** — privileged actions (reset password, approve, export) must not be callable without real role checks just because a model “chose” a tool
+6. **Hallucinated libraries** — model-suggested package names that are not real can be registered later as malware; treat novel dependency names as supply-chain risk (see above)
 
 Prefer findings that name the missing server-side control, not only “the model might refuse.”
 When reporting, use OWASP LLM/GenAI category labels where they fit (see `03-output-format.md`).

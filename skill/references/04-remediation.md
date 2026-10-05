@@ -84,3 +84,14 @@ if not (is_admin(user) or user["employee_id"] == employee_id):
     raise HTTPException(status_code=403, detail="Forbidden")
 # Why: models and output filters are not access-control boundaries
 ```
+
+## Hallucinated dependency (slopsquatting)
+```text
+# Before: install a package name that appeared in an LLM answer but is not a known project
+pip install super-secure-http-helpers
+
+# After: verify the project exists on the official registry and matches an expected
+# homepage/org; pin a known-good version in requirements/lockfile; prefer the
+# well-known library that already does the job.
+# Why: nonexistent names can be claimed later by attackers who publish malware
+```
