@@ -2,11 +2,13 @@
 
 Every remediation must show corrected code, fix the root cause, preserve developer intent, and say why the fix works (one sentence).
 
+Templates below are **Python/JS illustrations**. For Java, Go, PHP, Ruby, etc., apply the same security property with idiomatic APIs. Match the project’s SQL driver placeholder style (`?`, `%s`, `:name`, `$1`, …).
+
 ## SQL injection
 ```python
 # Before
 cursor.execute(f"SELECT * FROM users WHERE username = '{username}'")
-# After
+# After (sqlite3 uses ?; other drivers may use %s or :username — match the project)
 cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
 # Why: the driver treats the value as data, never as SQL syntax
 ```
@@ -24,9 +26,11 @@ subprocess.run(["convert", filename], shell=False)
 ```python
 # Before
 result = eval(expression)
-# After
-# Parse a small allowlisted expression language, or reject dynamic code entirely.
-# Why: eval executes attacker-controlled Python with full process privileges
+# After — for simple literals only:
+import ast
+result = ast.literal_eval(expression)
+# Or reject dynamic code and parse an allowlisted grammar (numbers/ops only).
+# Why: literal_eval cannot execute arbitrary Python; eval can
 ```
 
 ## Path traversal
@@ -35,11 +39,12 @@ result = eval(expression)
 path = EXPORT_DIR / user_filename
 open(path)
 # After
+base = EXPORT_DIR.resolve()
 candidate = (EXPORT_DIR / user_filename).resolve()
-if not str(candidate).startswith(str(EXPORT_DIR.resolve())):
+if not candidate.is_relative_to(base):
     raise ValueError("Path traversal detected")
 open(candidate)
-# Why: resolve collapses ../ ; prefix check keeps the path inside the base dir
+# Why: resolve collapses ../ ; is_relative_to avoids prefix tricks like base_evil/
 ```
 
 ## Insecure randomness
@@ -56,7 +61,7 @@ token = secrets.token_urlsafe(32)
 ## Secrets / API keys
 ```python
 # Before
-LLM_API_KEY = os.getenv("LLM_API_KEY", "CSG-ORBIT-EXFIL-9")
+LLM_API_KEY = os.getenv("LLM_API_KEY", "sk-demo-insecure-default")
 # After
 LLM_API_KEY = os.environ["LLM_API_KEY"]  # fail closed if unset; never ship real defaults
 # Why: default secrets in source become public credentials

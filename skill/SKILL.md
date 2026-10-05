@@ -1,6 +1,6 @@
 ---
 name: check-code
-version: 0.3.0
+version: 0.3.1
 spec_version: 1
 description: >-
   Performs focused application security code review: short three-pass methodology,
@@ -37,3 +37,5 @@ Read these modules **in order** (paths relative to this skill folder):
 **Directory:** load this skill, then analyze all source files under `<path/to/dir/>` for security vulnerabilities.
 
 Editors that support the [Agent Skills](https://cursor.com/docs/skills) layout discover this folder as a skill; load [`SKILL.md`](SKILL.md) first, then the `references/` chain it lists.
+
+When files are uploaded flat into a chat UI (no `references/` folder), still load them in the same numeric order (`00` → `04`) before application code.

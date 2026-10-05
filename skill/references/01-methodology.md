@@ -20,6 +20,8 @@ For each entry point and sensitive operation:
 3. Look for logic flaws: missing authn/authz, IDOR, workflow bypass
 4. Look for disclosure: secrets in source/env defaults, PII in logs, verbose errors
 
+**Coverage vs depth:** briefly consider every applicable check class in `02-checks.md` (do not skip a class because the code “looks fine”). Go deep only where evidence in scope supports it (e.g. proxy nuance only when proxy config is present).
+
 When edge/proxy config is in scope, check for path/authorization mismatch and request-derived redirects/headers (CRLF / open redirect). Do not prioritize proxy nuance over clear app-level sinks.
 
 ## Pass 3 — Validate
@@ -30,10 +32,10 @@ For each candidate:
 2. Did you miss sanitization or an upstream gate?
 3. Is impact real?
 4. For access control: classify missing authentication, function-level authz, object-level authz, or tenancy failure
-5. Include one plausible attacker input shape that reaches the sink
-6. For top findings: name one concrete change that would invalidate the finding
+5. Include one plausible attacker input shape that reaches the sink — put it under **Attacker input shape** in the finding schema
+6. For top findings: name one concrete change that would invalidate the finding — put it under **Invalidating change** in the finding schema
 
-Order findings by practical risk (exploitability × impact × confidence).  
+Order findings by practical risk (Priority, then Severity).  
 Valid → format per `03-output-format.md`. Ruled out → discard silently.
 
 ## Severity guide
