@@ -65,29 +65,34 @@ def validate_frontmatter(failures: list[str]) -> None:
                 )
 
 
-def validate_skill_reference_chain(failures: list[str]) -> None:
+def validate_skill_layout(failures: list[str]) -> None:
+    """Single-file skill: SKILL.md only under skill/ (no references/ chain)."""
     skill_path = REPO_ROOT / "skill" / "SKILL.md"
+    if not skill_path.exists():
+        fail("skill/SKILL.md: missing", failures)
+        return
+
+    refs_dir = REPO_ROOT / "skill" / "references"
+    if refs_dir.exists():
+        leftover = sorted(p.name for p in refs_dir.glob("*.md"))
+        if leftover:
+            fail(
+                "skill/references/: unexpected markdown files in one-file layout: "
+                + ", ".join(leftover),
+                failures,
+            )
+
     content = read_text(skill_path)
     listed_refs = re.findall(
         r"^\d+\.\s+\[references/[^\]]+\]\((references/[^)]+)\)",
         content,
         flags=re.MULTILINE,
     )
-    expected_refs = [
-        f"references/{path.name}"
-        for path in sorted((REPO_ROOT / "skill" / "references").glob("*.md"))
-    ]
-
-    if listed_refs != expected_refs:
+    if listed_refs:
         fail(
-            "skill/SKILL.md: reference list must match skill/references/*.md in sorted order",
+            "skill/SKILL.md: one-file skill must not list a references/ loading chain",
             failures,
         )
-
-    for ref in listed_refs:
-        target = skill_path.parent / ref
-        if not target.exists():
-            fail(f"skill/SKILL.md: linked reference does not exist: {ref}", failures)
 
 
 def iter_markdown_files() -> list[Path]:
@@ -140,7 +145,7 @@ def validate_markdown_links(failures: list[str]) -> None:
 def main() -> int:
     failures: list[str] = []
     validate_frontmatter(failures)
-    validate_skill_reference_chain(failures)
+    validate_skill_layout(failures)
     validate_markdown_links(failures)
 
     if failures:

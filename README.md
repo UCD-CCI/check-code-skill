@@ -2,12 +2,12 @@
 
 # Check Code Skill
 
-**Portable secure-code review for coding agents.**
+**Portable secure-code review for coding agents — one file.**
 
 [![Open Agent Skills](https://img.shields.io/badge/Open_Agent_Skills-specification-6366f1?style=flat-square)](https://openagentskills.dev/docs/specification)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 
-**[Quick start](#quick-start)** · **[Sample output](#sample-output)** · **[Skill modules](#skill-modules)**
+**[Quick start](#quick-start)** · **[Sample output](#sample-output)** · **[What’s in the skill](#whats-in-the-skill)**
 
 </div>
 
@@ -18,47 +18,48 @@
 
 <h2 id="quick-start">Quick start</h2>
 
-1. Copy [`skill/`](./skill/) into your project (or clone/submodule this repo).
-2. Point your agent host at [`skill/`](./skill/) — or open [`skill/SKILL.md`](./skill/SKILL.md) and read `references/` in order; no tooling required.
-3. Run a review:
+The entire skill is **[`skill/SKILL.md`](./skill/SKILL.md)** — upload or load that one file.
+
+**Chat UI (managers / demos):**
+
+1. Upload `skill/SKILL.md`
+2. Upload the code to review (for the demo app, `app/main.py` is enough)
+3. Prompt:
 
 ```text
-Load the Check Code skill, then analyze path/to/file.py for security vulnerabilities.
+Follow the Check Code skill in SKILL.md. Review the uploaded application code for security vulnerabilities and report findings in the skill’s format.
 ```
 
-For a whole tree, swap in `all source files under path/to/project/`. Try it on the [demo vulnerable app](https://github.com/UCD-CCI/appsec-demo-vulnerable-app).
+**IDE / agent host:**
+
+1. Copy [`skill/`](./skill/) into your project (or clone this repo)
+2. Load the Check Code skill, then analyze your target path
+
+Try it on the [demo vulnerable app](https://github.com/UCD-CCI/appsec-demo-vulnerable-app).
 
 <h2 id="why-check-code-skill">Why Check Code Skill</h2>
 
-One-shot “check my code for security” prompts tend to miss classes, hallucinate line numbers, and return inconsistent reports. This skill encodes a **repeatable** review pipeline:
+One-shot “check my code for security” prompts tend to miss classes, hallucinate line numbers, and return inconsistent reports. This skill encodes a **repeatable** review pipeline in a single markdown file:
 
-- **Grounded findings** — cite evidence; mark uncertainty explicitly.
-- **Structured coverage** — short methodology, OWASP/CWE checks, language/crypto pitfalls, and LLM trust boundaries.
-- **Actionable output** — one stable finding schema plus remediation patterns you can diff in Git.
+- **Grounded findings** — cite evidence; mark uncertainty explicitly
+- **Structured coverage** — methodology, OWASP/CWE checks, language/crypto pitfalls, LLM trust boundaries
+- **Actionable output** — stable finding schema with concrete remediations
 
-Works with any host that loads **[Open Agent Skills](https://openagentskills.dev/docs/specification)**-shaped content ([`SKILL.md`](./skill/SKILL.md) + numbered [`references/`](./skill/references/)). Plain Markdown — no bundled runtime.
+Works with any host that can load a skill file or accept an uploaded markdown instruction. Compatible with the [Open Agent Skills](https://openagentskills.dev/docs/specification) idea of a `SKILL.md` entrypoint.
 
 <h2 id="how-it-works">How it works</h2>
 
-The agent loads [`skill/SKILL.md`](./skill/SKILL.md), reads the reference chain **before** application code, then delivers a prioritized report.
-
 ```mermaid
 flowchart TD
-  A[Load skill/SKILL.md] --> B[Build review plan<br/>01-methodology]
-  A --> C[Set constraints<br/>00-identity]
-
-  B --> D[Analyze target source code]
-  C --> D
-
-  D --> E[Apply checks<br/>02-checks]
-  E --> F[Normalize into schema<br/>03-output-format]
-  F --> G[Propose concrete fixes<br/>04-remediation]
-  G --> H[Deliver prioritized report]
+  A[Load skill/SKILL.md] --> B[Identity + methodology]
+  B --> C[Apply security checks]
+  C --> D[Emit findings + remediations]
+  D --> E[Scan summary]
 ```
 
 <h2 id="sample-output">Sample output</h2>
 
-Findings follow [`03-output-format.md`](./skill/references/03-output-format.md) — stable IDs, CWE/OWASP mapping, and a fixed finding schema. Real reviews must include every required field; the example below is truncated.
+Findings follow the schema inside [`SKILL.md`](./skill/SKILL.md). Real reviews must include every required field; the example below is truncated.
 
 <details>
 <summary><strong>Example finding (illustrative)</strong></summary>
@@ -74,17 +75,16 @@ User-controlled `user_id` is interpolated into raw SQL. Use parameterized querie
 
 </details>
 
-<h2 id="skill-modules">Skill modules</h2>
+<h2 id="whats-in-the-skill">What’s in the skill</h2>
 
-| # | Reference | Covers |
-|--:|-----------|--------|
-| 00 | [`00-identity.md`](./skill/references/00-identity.md) | Mindset, scope, hard rules |
-| 01 | [`01-methodology.md`](./skill/references/01-methodology.md) | Three-pass review |
-| 02 | [`02-checks.md`](./skill/references/02-checks.md) | Vuln classes, language/crypto pitfalls, LLM trust boundaries |
-| 03 | [`03-output-format.md`](./skill/references/03-output-format.md) | Finding schema |
-| 04 | [`04-remediation.md`](./skill/references/04-remediation.md) | Fix patterns |
+One file, these sections:
 
-**Host setup:** discovery paths vary by product (project `.cursor/skills`, user-level dirs, Claude Code bundles, etc.). See your host’s docs — e.g. Cursor’s [Agent Skills](https://cursor.com/docs/skills) guide. Examples only, not exhaustive: **Cursor**, **Claude Code**, **Kiro**, and similar loaders may ingest [`skill/`](./skill/) unchanged once discovery matches.
+| Section | Covers |
+|---------|--------|
+| Identity | Mindset, scope, hard rules |
+| Methodology | Three-pass review + severity |
+| Security checks | Injection, XSS, authz, crypto, LLM, supply chain |
+| Output format | Finding schema, priority, OWASP labels, short fix examples |
 
 <h2 id="license">License</h2>
 

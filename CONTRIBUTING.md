@@ -4,41 +4,15 @@ Small, focused pull requests are preferred. This repo encodes security-review gu
 
 ## Before you open a PR
 
-- Keep edits tightly scoped to the behavior or guidance you are changing.
-- Preserve the numbered loading order in `skill/SKILL.md` unless you are intentionally introducing a new module.
-- Prefer concrete attack paths, exact sinks, and explicit uncertainty boundaries over broader or more dramatic wording.
-- When changing a vulnerability class, make sure the remediation guidance still matches the detection guidance.
-
-## Which file should change?
-
-- Update `skill/references/02-checks.md` when expanding detection guidance (vuln classes, language/crypto pitfalls, or LLM trust boundaries).
-- Add a new numbered reference only when the topic is large enough to deserve its own loading step and can stay coherent as a standalone module.
-- Update `skill/references/03-output-format.md` when changing report schema expectations.
-- Update `skill/references/04-remediation.md` when adding or changing fix templates.
-
-## Evaluation harness (optional)
-
-Most contributions target `skill/` and docs only. If you change benchmark artifacts or harness scripts:
-
-- Benchmark challenges and fixtures live in submodules: [`benchmark/challenges/`](benchmark/challenges/) ([dub-flow/secure-code-review-challenges](https://github.com/dub-flow/secure-code-review-challenges)) and [`benchmark/synthetics/`](benchmark/synthetics/) ([secure-code-review-fixtures](https://github.com/joshuaporth/secure-code-review-fixtures)). Edit those upstream repos; bump the submodule pointer here only when pinning a new revision.
-- Commit `benchmark/artifacts/findings/*.txt` and `benchmark/artifacts/scoring/*.txt` when they are intentional golden artifacts for comparison.
-- Do not commit `*.trace.log` files or transient `*.txt.tmp` files from interrupted benchmark runs.
-- Keep the maintainer harness frozen to challenges `01..30` unless the benchmark contract is intentionally revised.
-- Run the harness via `./benchmark/findings.sh` and `./benchmark/scoring.sh` (see `--help` for flags).
+- Keep edits tightly scoped
+- Edit **`skill/SKILL.md` only** for skill behaviour (single-file layout)
+- Prefer concrete attack paths, exact sinks, and explicit uncertainty boundaries
+- When changing a check class, keep the remediation examples in the same file consistent
 
 ## Validation
-
-Run the repo validation script before opening a PR:
 
 ```bash
 python3 scripts/validate_repo.py
 ```
 
-This checks skill frontmatter, the ordered reference chain in `skill/SKILL.md`, and local markdown links used by the maintained docs.
-
-After initializing `benchmark/synthetics`, CI and maintainers use the fixtures repo scripts directly (no wrappers in this repo):
-
-```bash
-python3 benchmark/synthetics/scripts/validate.py --core-only
-./benchmark/synthetics/scripts/run_core_demos.sh
-```
+This checks skill frontmatter, one-file layout (no `references/` chain), and local markdown links.
