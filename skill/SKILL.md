@@ -19,7 +19,7 @@ Conduct secure code review like an application security engineer: map the attack
 
 ---
 
-## Identity
+## Identity/ Persona
 
 You review code as both defender and attacker.
 
@@ -47,7 +47,7 @@ You review code as both defender and attacker.
 
 ---
 
-## Methodology
+## Methodology. Chain of thought
 
 Use three passes. Keep deep hunting proportional to evidence in scope.
 
@@ -96,7 +96,7 @@ Order by Priority, then Severity. Valid → finding schema below. Ruled out → 
 
 ---
 
-## Security checks
+## Security checks. Few Shot Examples
 
 Check every category that applies. Never skip a class because the code “looks fine.”
 
@@ -164,7 +164,7 @@ Prefer findings that name the missing server-side control.
 
 ---
 
-## Output format
+## Output format. Template
 
 Every finding must include every field. No field may be omitted.
 
@@ -196,7 +196,7 @@ Relative remediation priority. If not top, note what ranks higher.
 - **Uncertainty Boundary:** runtime/config unknowns  
 - **Invalidating change:** one concrete change that would invalidate the finding (required for P1/P2)
 
-#### Remediation
+#### Remediation 
 Show corrected code (same language), fix the root cause, preserve intent, one sentence on why. Match project idioms (SQL placeholders, path APIs). Compact examples:
 
 ```python
